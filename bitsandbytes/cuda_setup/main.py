@@ -35,7 +35,8 @@ CUDA_RUNTIME_LIBS: list = ['libcudart.so.12'] #["libcudart.so", 'libcudart.so.11
 
 # this is a order list of backup paths to search CUDA in, if it cannot be found in the main environmental paths
 backup_paths = []
-backup_paths.append('$CONDA_PREFIX/lib/libcudart.so.11.0')
+# backup_paths.append('$CONDA_PREFIX/lib/libcudart.so.11.0')
+backup_paths.append('$CONDA_PREFIX/lib/libcudart.so.12')
 
 class CUDASetup:
     _instance = None
@@ -69,6 +70,7 @@ class CUDASetup:
             self.add_log_entry('CUDA SETUP: Solution 2b): For example, "bash cuda_install.sh 113 ~/local/" will download CUDA 11.3 and install into the folder ~/local')
             return
 
+        print("arian self.cuda_version_string: ", self.cuda_version_string)
         make_cmd = f'CUDA_VERSION={self.cuda_version_string}'
         if len(self.cuda_version_string) < 3:
             make_cmd += ' make cuda92'
@@ -76,6 +78,9 @@ class CUDASetup:
             make_cmd += ' make cuda110'
         elif self.cuda_version_string[:2] == '11' and int(self.cuda_version_string[2]) > 0:
             make_cmd += ' make cuda11x'
+        elif self.cuda_version_string[:2] == '12' and int(self.cuda_version_string[2]) > 0:
+            make_cmd += ' make cuda12x'
+            print("arian make cuda12x added ran!")
         elif self.cuda_version_string == '100':
             self.add_log_entry('CUDA SETUP: CUDA 10.0 not supported. Please use a different CUDA version.')
             self.add_log_entry('CUDA SETUP: Before you try again running bitsandbytes, make sure old CUDA 10.0 versions are uninstalled and removed from $LD_LIBRARY_PATH variables.')
